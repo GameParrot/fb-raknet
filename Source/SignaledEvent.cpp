@@ -228,9 +228,7 @@ void SignaledEvent::WaitOnEvent(int timeoutMs)
             // not sure how this works on other platforms since according to
             // the docs you are suppost to hold the lock before you wait
             // on the cond.
-            pthread_mutex_lock(&hMutex);
-			pthread_cond_timedwait(&eventList, &hMutex, &ts);
-            pthread_mutex_unlock(&hMutex);
+			usleep(1);
 
 			timeoutMs-=5;
 
@@ -245,16 +243,7 @@ void SignaledEvent::WaitOnEvent(int timeoutMs)
 		}
 
 		// Wait the remaining time, and turn off the signal in case it was set
-		ts.tv_nsec += timeoutMs*1000000;
-		if (ts.tv_nsec >= 1000000000)
-		{
-		        ts.tv_nsec -= 1000000000;
-		        ts.tv_sec++;
-		}
-
-		pthread_mutex_lock(&hMutex);
-		pthread_cond_timedwait(&eventList, &hMutex, &ts);
-        pthread_mutex_unlock(&hMutex);
+		usleep(timeoutMs*1000);
 
 		isSignaledMutex.Lock();
 		isSignaled=false;
