@@ -243,7 +243,7 @@ void SignaledEvent::WaitOnEvent(int timeoutMs)
 		}
 
 		// Wait the remaining time, and turn off the signal in case it was set
-		usleep(timeoutMs*1000);
+		usleep(timeoutMs*100);
 
 		isSignaledMutex.Lock();
 		isSignaled=false;
